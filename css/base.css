@@ -1,0 +1,127 @@
+/*
+╔══════════════════════════════════════════════════════════════╗
+║  base.css — Reset & Basis-Styles                             ║
+║                                                              ║
+║  Enthält: Box-Model Reset, Body, Scrollbar, Scanlines-       ║
+║  Overlay, Basis-Typographie                                  ║
+╚══════════════════════════════════════════════════════════════╝
+*/
+
+/* ── BOX MODEL RESET ────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── BODY & HTML ────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;  /* verhindert Font-Scaling auf iOS */
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;  /* app-shell handles scrolling */
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg-body);
+  overflow-x: hidden;
+  /* Radiales Glow */
+  background-image:
+    radial-gradient(ellipse 60% 40% at 50% 20%, rgba(0,229,255,.04) 0%, transparent 70%);
+}
+
+/* ── SCANLINES OVERLAY ──────────────────────────────────────── */
+/* Erzeugt den Retro-CRT-Effekt über der gesamten Seite         */
+/* Entfernen: body::before { display: none; }                   */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,.04) 2px,
+    rgba(0,0,0,.04) 4px
+  );
+  pointer-events: none;   /* klickbar bleibt alles dahinter    */
+  z-index: 9999;          /* liegt über allem                  */
+}
+
+/* ── SCROLLBAR ──────────────────────────────────────────────── */
+/* Webkit (Chrome, Safari, Edge) */
+::-webkit-scrollbar       { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-body); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: var(--r-pill); }
+::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+/* Firefox */
+* { scrollbar-width: thin; scrollbar-color: var(--border) var(--bg-body); }
+
+/* ── TYPOGRAPHIE BASIS ──────────────────────────────────────── */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: .05em;
+}
+
+a {
+  color: var(--cyan);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+/* ── BUTTON RESET ───────────────────────────────────────────── */
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+button:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+/* ── INPUT RESET ────────────────────────────────────────────── */
+input, select, textarea {
+  font-family: var(--font-body);
+  color: var(--text);
+}
+input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+/* ── UTILITY: Selektion verhindern (für Karten etc.) ──────────*/
+.no-select {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* ── UTILITY: Versteckt (aber zugänglich) ─────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+}
+
+/* ── HAUPT-WRAPPER ─────────────────────────────────────────── */
+.wrap {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: calc(var(--header-h) + 16px) var(--panel-pad) 80px;
+}
+@media (min-width: 600px) {
+  .wrap { padding: calc(var(--header-h) + 24px) var(--panel-pad-d) 40px; }
+}

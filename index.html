@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#00e5ff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="NEXUS">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./assets/icon-192.png">
+  <link rel="icon" type="image/svg+xml" href="./assets/icon.svg">
+  <title>NEXUS — Quest Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Syne:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- TOP BAR -->
+  <header class="topbar" id="main-header">
+    <div class="topbar-logo">NEXUS</div>
+    <div class="topbar-xp">
+      <div class="topbar-xp-meta">
+        <span class="topbar-lvl" id="h-lvl">LV 1</span>
+        <span class="topbar-class" id="h-class">ANFÄNGER</span>
+        <span class="topbar-xpnum" id="h-xpn">0/500</span>
+      </div>
+      <div class="topbar-track"><div class="topbar-fill" id="xp-fill" style="width:0%"></div></div>
+    </div>
+    <div class="topbar-right">
+      <div class="streak-chip">🔥 <span id="h-streak">0</span></div>
+      <div class="streak-chip" id="h-boost" style="display:none;background:rgba(255,179,0,.12);border-color:rgba(255,179,0,.3)"></div>
+      <button class="notif-btn" id="notif-btn">🔔<div class="notif-dot" id="notif-dot"></div></button>
+    </div>
+  </header>
+
+  <div class="notif-panel" id="notif-panel">
+    <div class="notif-hd">Benachrichtigungen<span class="notif-clear" id="notif-clear-btn">Alle löschen</span></div>
+    <div id="notif-list"></div>
+  </div>
+
+  <div class="screen-body">
+
+    <!-- HOME -->
+    <div class="screen active" id="s-home">
+      <div class="home-hero">
+        <div class="hero-top">
+          <div class="hero-avatar" id="home-avatar" onclick="App.navTo('profile')">⚔️</div>
+          <div class="hero-info">
+            <div class="hero-greeting">Willkommen zurück,</div>
+            <div class="hero-name" id="home-username">ABENTEURER</div>
+            <div class="hero-meta-row">
+              <span class="hero-lvl-badge" id="home-lvl-badge">LV 1</span>
+              <span class="hero-class-txt" id="home-class">Anfänger</span>
+            </div>
+            <div class="hero-title-txt" id="home-title">Bereit für Großes</div>
+          </div>
+          <div class="hero-streak-box">
+            <div class="hero-streak-num" id="home-streak">0</div>
+            <div class="hero-streak-lbl">🔥 Streak</div>
+          </div>
+        </div>
+        <div class="hero-xp-section">
+          <div class="hero-xp-meta">
+            <span class="hero-xp-label" id="home-lvl-label">LV 1</span>
+            <span class="hero-xp-num" id="home-xpn">0 / 500 XP</span>
+          </div>
+          <div class="hero-xp-track"><div class="hero-xp-fill" id="home-xp-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <!-- Daily 7-Day Box -->
+      <div class="daily7-card">
+        <div class="sec-hd" style="margin-bottom:10px">
+          <span class="sec-title">// 7-Tage Login</span>
+          <span style="font-size:10px;color:var(--muted)" id="daily7-streak-lbl">Tag 1/7</span>
+        </div>
+        <div class="day7-row" id="daily7-boxes"></div>
+        <button class="daily7-claim-btn fbtn" id="daily7-claim-btn" onclick="App.claimDailyFromHome()" style="width:100%;margin-top:10px">
+          Tag 1 einlösen
+        </button>
+      </div>
+
+      <div class="home-stats">
+        <div class="hstat c1"><div class="hstat-val" id="s-xp">0</div><div class="hstat-lbl">Gesamt XP</div></div>
+        <div class="hstat c2"><div class="hstat-val" id="s-done">0</div><div class="hstat-lbl">Erledigt</div></div>
+        <div class="hstat c3"><div class="hstat-val" id="s-active">0</div><div class="hstat-lbl">Aktive</div></div>
+        <div class="hstat c4"><div class="hstat-val" id="s-cards">0</div><div class="hstat-lbl">Karten</div></div>
+      </div>
+
+      <div class="sec-hd">
+        <span class="sec-title">// Heutige Quests</span>
+        <button class="sec-btn" onclick="App.navTo('tasks')">Alle ›</button>
+      </div>
+      <!-- daily-btn shim for render.js _updateDailyBtn() -->
+      <button id="home-daily-btn" style="display:none"></button>
+      <span id="daily-sub-txt" style="display:none"></span>
+      <div id="home-task-preview"></div>
+    </div>
+
+    <!-- TASKS -->
+    <div class="screen" id="s-tasks">
+
+      <!-- Pending card banner -->
+      <div id="active-card-banner" class="active-card-banner" style="display:none"></div>
+
+      <!-- Quest Tab Bar -->
+      <div class="quest-tabs">
+        <button class="qtab on" id="qtab-daily"   onclick="App.questTab('daily',this)">
+          <span class="qtab-ico">📅</span> Daily
+        </button>
+        <button class="qtab"    id="qtab-weekly"  onclick="App.questTab('weekly',this)">
+          <span class="qtab-ico">🏆</span> Weekly
+        </button>
+        <button class="qtab"    id="qtab-custom"  onclick="App.questTab('custom',this)">
+          <span class="qtab-ico">⚙️</span> Custom
+        </button>
+      </div>
+
+      <!-- ── DAILY TAB ─────────────────────────────────────── -->
+      <div class="quest-panel" id="qpanel-daily">
+        <div class="quest-panel-hd">
+          <div class="qpanel-title">Daily Quests</div>
+          <div class="qpanel-sub">Täglich neue Aufgaben · kein Karten-Einsatz</div>
+        </div>
+        <div id="daily-task-list"></div>
+      </div>
+
+      <!-- ── WEEKLY TAB ────────────────────────────────────── -->
+      <div class="quest-panel" id="qpanel-weekly" style="display:none">
+        <div class="quest-panel-hd">
+          <div class="qpanel-title">Weekly Challenges</div>
+          <div class="qpanel-sub">Große Belohnungen · Karten erlaubt 🃏</div>
+        </div>
+        <div id="weekly-challenges-list"></div>
+        <!-- Hidden pool grid still rendered for logic, not visible -->
+        <div id="weekly-grid" style="display:none"></div>
+      </div>
+
+      <!-- ── CUSTOM TAB ─────────────────────────────────────── -->
+      <div class="quest-panel" id="qpanel-custom" style="display:none">
+        <div class="quest-panel-hd">
+          <div class="qpanel-title">Custom Quests</div>
+          <div class="qpanel-sub">Eigene Aufgaben · Karten erlaubt 🃏</div>
+        </div>
+
+        <!-- Create form -->
+        <div class="add-form">
+          <div class="add-form-row">
+            <input class="fi" type="text" id="task-input" placeholder="Quest beschreiben…" maxlength="100" autocomplete="off">
+            <select class="fsel diff-picker" id="diff-sel" title="Schwierigkeit">
+              <option value="micro">🟢 Easy  · 50 XP</option>
+              <option value="normal" selected>🟡 Normal · 100 XP</option>
+              <option value="hard">🔴 Hard  · 250 XP</option>
+            </select>
+            <button class="fbtn" onclick="App.addTask()">+ Quest</button>
+          </div>
+        </div>
+
+        <!-- Hidden shim: cat-sel still referenced by app.js addTask -->
+        <select id="cat-sel" style="display:none"><option value="custom" selected>custom</option></select>
+        <!-- Difficulty filter -->
+        <div class="diff-filter-row" id="task-filters" style="margin-bottom:12px">
+          <button class="diff-ftab on" onclick="App.setFilt('all',this)" data-diff="all">Alle</button>
+          <button class="diff-ftab" onclick="App.setFilt('micro',this)" data-diff="micro">🟢 Easy</button>
+          <button class="diff-ftab" onclick="App.setFilt('normal',this)" data-diff="normal">🟡 Normal</button>
+          <button class="diff-ftab" onclick="App.setFilt('hard',this)" data-diff="hard">🔴 Hard</button>
+        </div>
+
+        <div id="task-list"></div>
+      </div>
+
+    </div>
+
+    <!-- Hidden shims (legacy IDs still referenced by render.js) -->
+    <div style="display:none">
+      <div id="hand-total"></div><div id="hand-cards"></div>
+      <div id="simple-card-inv"></div><span id="skill-tab-badge"></span>
+      <div id="skill-tree-grid"></div><div id="sp-count"></div>
+      <div id="skill-summary"></div><span id="skill-pts-badge"></span>
+    </div>
+
+    <!-- ACHIEVEMENTS (standalone screen) -->
+    <div class="screen" id="s-achievements">
+      <div class="ach-screen-hd">
+        <div class="ach-screen-title">// ACHIEVEMENTS</div>
+        <div class="ach-screen-sub" id="ach-progress-summary">0 / 0 freigeschaltet</div>
+      </div>
+      <!-- Filter tabs -->
+      <div id="ach-filters" class="filter-row" style="margin-bottom:16px;flex-wrap:wrap;gap:6px"></div>
+      <!-- Achievement grid -->
+      <div id="ach-grid" class="ach-full-grid"></div>
+    </div>
+
+    <!-- SHOP -->
+    <div class="screen" id="s-shop">
+      <div id="shop-content"></div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="screen" id="s-profile">
+
+      <!-- Profile Header (always visible) -->
+      <div class="prof-card">
+        <div class="prof-top">
+          <div class="avatar-wrap">
+            <div class="avatar" id="profile-avatar">⚔️</div>
+            <input type="file" id="avatar-upload" accept="image/*" hidden>
+            <button class="avatar-edit-btn" id="avatar-edit-btn">✏️</button>
+          </div>
+          <div class="ph-info">
+            <div class="ph-name-row">
+              <span class="ph-name" id="ph-name">ABENTEURER</span>
+              <button class="ph-edit-btn" id="edit-name-btn">✏️</button>
+            </div>
+            <div class="ph-name-edit" id="ph-name-edit" style="display:none">
+              <input class="fi" type="text" id="name-input" maxlength="20" placeholder="Name…" style="padding:7px 10px;font-size:12px">
+              <button class="fbtn" style="padding:7px 12px;font-size:11px" onclick="Profile.saveName()">OK</button>
+            </div>
+            <div class="ph-class" id="ph-class">Anfänger</div>
+            <div class="ph-title" id="ph-title">Bereit für Großes</div>
+            <div class="prof-xp-wrap">
+              <div class="prof-xp-lbl" id="prof-xp-label">0 / 500 XP</div>
+              <div class="prof-xp-track"><div class="prof-xp-fill" id="prof-xp-fill" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Tabs -->
+      <div class="prof-tabs">
+        <button class="ptab on" id="ptab-stats"       onclick="App.profileTab('stats',this)">📊 Stats</button>
+        <button class="ptab"    id="ptab-inventory"   onclick="App.profileTab('inventory',this)">🎒 Inventar</button>
+        <button class="ptab"    id="ptab-rewards"     onclick="App.profileTab('rewards',this)">🎁 Rewards</button>
+      </div>
+
+      <!-- Stats Tab -->
+      <div class="prof-tab-content" id="ptab-content-stats">
+        <div class="p-stats">
+          <div class="pst"><div class="pst-val" style="color:var(--amber)"  id="pp-xp">0</div><div class="pst-lbl">XP</div></div>
+          <div class="pst"><div class="pst-val" style="color:var(--cyan)"   id="pp-lvl">1</div><div class="pst-lbl">Level</div></div>
+          <div class="pst"><div class="pst-val" style="color:var(--green)"  id="pp-done">0</div><div class="pst-lbl">Erledigt</div></div>
+          <div class="pst"><div class="pst-val" style="color:var(--red)"    id="pp-skip">0</div><div class="pst-lbl">Skip</div></div>
+          <div class="pst"><div class="pst-val" style="color:var(--amber)"  id="pp-streak">0</div><div class="pst-lbl">🔥 Streak</div></div>
+          <div class="pst"><div class="pst-val" style="color:var(--purple)" id="pp-ach">0</div><div class="pst-lbl">Erfolge</div></div>
+        </div>
+        <div class="prof-ach-row">
+          <div class="prof-ach-title">// Errungenschaften</div>
+          <div id="profile-achievements"></div>
+        </div>
+        <div class="settings-card" style="margin-top:16px">
+          <button class="reset-btn" id="reset-btn">⚠ SPIELSTAND ZURÜCKSETZEN</button>
+        </div>
+      </div>
+
+      <!-- Inventory Tab -->
+      <div class="prof-tab-content" id="ptab-content-inventory" style="display:none">
+        <!-- Lootbox Inventory -->
+        <div class="sec-hd" style="margin-bottom:8px">
+          <span class="sec-title">// Lootboxen</span>
+          <span style="font-size:10px;color:var(--muted)">Tippe zum Öffnen</span>
+        </div>
+        <div id="lootbox-inv-list" class="lbox-grid" style="margin-bottom:18px"></div>
+
+        <!-- Pity counters -->
+        <div class="inv-pity-row" style="margin-bottom:14px">
+          <div class="inv-pity-item">
+            <span class="inv-pity-lbl">Epic Pity</span>
+            <div class="inv-pity-track"><div class="inv-pity-fill inv-pity-epic" id="pity-epic-bar"></div></div>
+            <span class="inv-pity-num" id="pity-epic-txt">0/30</span>
+          </div>
+          <div class="inv-pity-item">
+            <span class="inv-pity-lbl">Legendary Pity</span>
+            <div class="inv-pity-track"><div class="inv-pity-fill inv-pity-leg" id="pity-leg-bar"></div></div>
+            <span class="inv-pity-num" id="pity-leg-txt">0/100</span>
+          </div>
+        </div>
+        <!-- 6×4 Grid -->
+        <div class="inv-grid-wrap" style="margin-bottom:14px">
+          <div class="inv-grid-main">
+            <div id="grid-inv-slots" class="inv-grid"></div>
+          </div>
+          <div class="inv-grid-aside">
+            <div class="inv-lastused-wrap" id="inv-lastused">
+              <div class="inv-slot inv-slot-empty inv-slot-lastused-special"></div>
+              <div class="inv-lastused-label">Zuletzt</div>
+            </div>
+            <div class="inv-aside-hint">Tippe Karte</div>
+          </div>
+        </div>
+        <!-- Hidden shims — IDs still referenced by JS, invisible -->
+        <div style="display:none">
+          <div id="inv-cards-list"></div>
+          <div id="inv-tab-cards"></div>
+          <div id="inv-tab-cosmetics"></div>
+          <div class="cosmetic-grid" id="inv-cosm-color"></div>
+          <div class="cosmetic-grid" id="inv-cosm-bg"></div>
+          <div class="cosmetic-grid" id="inv-cosm-effect"></div>
+          <div class="cosmetic-grid" id="inv-cosm-frame"></div>
+          <div class="cosmetic-grid" id="inv-cosm-title"></div>
+        </div>
+      </div>
+
+      <!-- Rewards Tab -->
+      <div class="prof-tab-content" id="ptab-content-rewards" style="display:none">
+        <div class="rewards-card" style="margin-top:0">
+          <div class="rewards-tabs" id="rewards-tabs">
+            <button class="rtab on" onclick="App.rtab('levels',this)">Level</button>
+            <button class="rtab"    onclick="App.rtab('streak',this)">Streak</button>
+            <button class="rtab"    onclick="App.rtab('cosm',this)">Cosmetics</button>
+          </div>
+          <div id="r-levels"><div class="level-grid" id="level-grid"></div></div>
+          <div id="r-streak" style="display:none"><div class="streak-rewards-grid" id="streak-grid"></div></div>
+          <div id="r-cosm"   style="display:none"><div class="cosmetic-grid"       id="cosm-grid"></div></div>
+        </div>
+      </div>
+
+    </div>
+
+  </div><!-- /screen-body -->
+
+  <!-- BOTTOM NAV — 5 tabs -->
+  <nav class="bottom-nav">
+    <button class="bnav-btn active" id="bnav-home"         onclick="App.navTo('home')"><span class="bi">⚡</span><span>Home</span></button>
+    <button class="bnav-btn"        id="bnav-tasks"        onclick="App.navTo('tasks')"><span class="bi">⚔️</span><span>Tasks</span></button>
+    <button class="bnav-btn"        id="bnav-achievements" onclick="App.navTo('achievements')"><span class="bi">🏆</span><span>Erfolge</span><span class="bnav-badge" id="ach-badge" style="display:none"></span></button>
+    <button class="bnav-btn"        id="bnav-shop"         onclick="App.navTo('shop')"><span class="bi">🛒</span><span>Shop</span></button>
+    <button class="bnav-btn"        id="bnav-profile"      onclick="App.navTo('profile')"><span class="bi">◎</span><span>Profil</span></button>
+  </nav>
+
+</div><!-- /app-shell -->
+
+<!-- MODALS -->
+<div class="overlay" id="ov-card">
+  <div class="modal">
+    <div class="mhd" id="cm-title">// Karte einsetzen</div>
+    <div class="msub" id="cm-sub">Wähle eine Karte:</div>
+    <div id="card-opts"></div>
+    <button class="mcancel" onclick="App.closeOv('ov-card')">— Abbrechen —</button>
+  </div>
+</div>
+<div class="overlay" id="ov-loot">
+  <div class="modal loot-modal">
+    <div class="mhd" id="loot-title">// Lootbox</div>
+    <div class="loot-box-wrap" id="loot-box-wrap" onclick="Cards.shakeLoot()">
+      <div class="loot-box" id="loot-box">📦</div>
+    </div>
+    <div class="loot-hint" id="loot-hint">Klicke die Box!</div>
+    <div id="loot-results" style="display:none"></div>
+    <button class="loot-btn" id="loot-btn" onclick="Cards.openLoot()">Öffnen!</button>
+  </div>
+</div>
+<div class="overlay" id="ov-lu">
+  <div class="modal lu-m">
+    <span class="lu-burst" id="lu-ico">🎉</span>
+    <div class="lu-title">Level Up!</div>
+    <div class="lu-lvl"   id="lu-lvl">10</div>
+    <div class="lu-class" id="lu-class">Macher</div>
+    <div class="lu-rew"   id="lu-rew">🎁 Reward</div>
+    <button class="lu-btn" onclick="App.closeForcedOv('ov-lu')">WEITER ▶</button>
+  </div>
+</div>
+<div class="overlay" id="ov-ach">
+  <div class="modal ach-modal">
+    <div class="ach-m-ico"   id="am-ico">🏅</div>
+    <div class="ach-m-title">Achievement!</div>
+    <div class="ach-m-name"  id="am-name"></div>
+    <div class="ach-m-desc"  id="am-desc"></div>
+    <div class="ach-m-rew"   id="am-rew"></div>
+    <button class="lu-btn" onclick="App.closeForcedOv('ov-ach')">SUPER! ✓</button>
+  </div>
+</div>
+<div class="overlay" id="ov-daily">
+  <div class="modal lu-m">
+    <div class="lu-burst" id="daily-ico">🌅</div>
+    <div class="lu-title">Daily Login!</div>
+    <div class="lu-lvl" id="daily-title" style="font-size:28px;color:var(--cyan)">+100 XP</div>
+    <div class="lu-rew" id="daily-sub">Komm morgen wieder!</div>
+    <button class="lu-btn" onclick="App.closeOv('ov-daily')" style="background:linear-gradient(135deg,var(--cyan),var(--green))">EINSAMMELN ✓</button>
+  </div>
+</div>
+
+<!-- INVENTORY OVERLAY (grid-based, fullscreen) -->
+<div id="inv-overlay" class="inv-overlay">
+  <div class="inv-overlay-backdrop" onclick="App.closeInventoryOverlay()"></div>
+  <div class="inv-overlay-body">
+    <div class="inv-overlay-hd">
+      <div class="inv-overlay-title">🎒 Inventar</div>
+      <div class="inv-pity-row">
+        <div class="inv-pity-item">
+          <span class="inv-pity-lbl">Epic Pity</span>
+          <div class="inv-pity-track"><div class="inv-pity-fill inv-pity-epic" id="pity-epic-bar"></div></div>
+          <span class="inv-pity-num" id="pity-epic-txt">0/30</span>
+        </div>
+        <div class="inv-pity-item">
+          <span class="inv-pity-lbl">Legendary Pity</span>
+          <div class="inv-pity-track"><div class="inv-pity-fill inv-pity-leg" id="pity-leg-bar"></div></div>
+          <span class="inv-pity-num" id="pity-leg-txt">0/100</span>
+        </div>
+      </div>
+      <button class="inv-overlay-close" onclick="App.closeInventoryOverlay()">×</button>
+    </div>
+
+    <div class="inv-grid-wrap">
+      <div class="inv-grid-main">
+        <div id="grid-inv-slots-overlay" class="inv-grid"></div>
+      </div>
+      <div class="inv-grid-aside">
+        <div class="inv-lastused-wrap" id="inv-lastused-overlay">
+          <div class="inv-slot inv-slot-empty inv-slot-lastused-special"></div>
+          <div class="inv-lastused-label">Zuletzt</div>
+        </div>
+        <div class="inv-aside-hint">Klicke eine Karte für Details</div>
+      </div>
+    </div>
+
+    <div class="inv-overlay-footer">
+      <span style="font-size:11px;color:var(--muted)" id="inv-footer-task"></span>
+      <button class="fbtn" style="padding:8px 16px;font-size:12px" onclick="App.closeInventoryOverlay()">Schließen</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="js/config.js"></script>
+<script src="js/state.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/cards.js"></script>
+<script src="js/achievements.js"></script>
+<script src="js/cosmetics.js"></script>
+<script src="js/skilltree.js"></script>
+<script src="js/render.js"></script>
+<script src="js/profile.js"></script>
+<script src="js/app.js"></script>
+
+<!-- PWA Service Worker -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(reg => console.log('[NEXUS] SW aktiv:', reg.scope))
+        .catch(err => console.warn('[NEXUS] SW Fehler:', err));
+    });
+  }
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js")
+      .then(r => console.log("[NEXUS] SW registered:", r.scope))
+      .catch(e => console.warn("[NEXUS] SW failed:", e));
+  });
+}
+</script>
+</body>
+</html>

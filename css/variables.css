@@ -1,0 +1,125 @@
+/*
+╔══════════════════════════════════════════════════════════════╗
+║  variables.css — Design Tokens                               ║
+║                                                              ║
+║  Hier findest du ALLE Farben, Abstände, Fonts und Größen.    ║
+║  Ändere diese Werte um das gesamte Design anzupassen.        ║
+║                                                              ║
+║  ANPASSEN:                                                   ║
+║  • Hauptfarbe ändern → --cyan Wert tauschen                  ║
+║  • Schriftart ändern → --font-display / --font-body          ║
+║  • Dunkleres/helleres Theme → --bg-* Werte anpassen          ║
+╚══════════════════════════════════════════════════════════════╝
+*/
+
+:root {
+
+  /* ── FARBEN: Haupt-Palette ───────────────────────────────── */
+  --cyan:   #00e5ff;   /* Primärfarbe / Highlights            */
+  --amber:  #ffb300;   /* XP / Level / Gold-Elemente          */
+  --green:  #00e676;   /* Erfolge / Erledigt / Positiv        */
+  --red:    #ff1744;   /* Fehler / Gefahr / Überspringen       */
+  --purple: #d500f9;   /* Legendary / Achievements            */
+  --blue:   #2979ff;   /* Info / Secondary                    */
+
+  /* ── FARBEN: Hintergründe ────────────────────────────────── */
+  --bg-body:  #080a10;  /* Seiten-Hintergrund (tiefstes Schwarz) */
+  --bg-card:  #0e1018;  /* Karten- / Box-Hintergrund            */
+  --bg-hover: #141820;  /* Hover-State Hintergrund              */
+  --bg-input: #0c0f17;  /* Input-Felder                         */
+  --border:   #1e2535;  /* Standard-Rand                        */
+  --border-bright: #2e3a55; /* Hellerer Rand (fokussiert)        */
+
+  /* ── FARBEN: Text ────────────────────────────────────────── */
+  --text:   #e2e8f0;   /* Haupt-Textfarbe                      */
+  --muted:  #4a5568;   /* Gedimmter / sekundärer Text          */
+  --subtle: #2d3748;   /* Sehr gedimmter Text / Trenner         */
+
+  /* ── KARTEN-RARITÄTEN: Farben ────────────────────────────── */
+  /* Anpassen: Eigene Farben für jede Rarität setzen           */
+  --common:    #78909c;   /* Common   = Grau-Blau              */
+  --rare:      #2979ff;   /* Rare     = Blau                   */
+  --epic:      #d500f9;   /* Epic     = Lila                   */
+  --legendary: #ffb300;   /* Legendary = Gold                  */
+
+  /* ── SCHRIFTEN ───────────────────────────────────────────── */
+  /* Zum Ändern: Google Fonts URL in index.html tauschen       */
+  --font-display: 'Orbitron', 'Courier New', monospace;  /* Überschriften / Zahlen */
+  --font-body:    'Syne',     'Segoe UI',    sans-serif;  /* Fließtext              */
+
+  /* ── ABSTÄNDE ────────────────────────────────────────────── */
+  --gap-xs: 4px;
+  --gap-sm: 8px;
+  --gap-md: 12px;
+  --gap-lg: 16px;
+  --gap-xl: 24px;
+  --gap-2x: 32px;
+
+  /* ── RADIEN ──────────────────────────────────────────────── */
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+  --r-pill: 999px;
+
+  /* ── SCHATTIERUNGEN ──────────────────────────────────────── */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.4);
+  --shadow-md: 0 4px 16px rgba(0,0,0,.5);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,.6);
+
+  /* Glowing-Schatten für Neon-Effekte */
+  --glow-cyan:   0 0 12px rgba(0,229,255,.35), 0 0 24px rgba(0,229,255,.15);
+  --glow-amber:  0 0 12px rgba(255,179,0,.35),  0 0 24px rgba(255,179,0,.15);
+  --glow-green:  0 0 12px rgba(0,230,118,.35),  0 0 24px rgba(0,230,118,.15);
+  --glow-purple: 0 0 12px rgba(213,0,249,.35),  0 0 24px rgba(213,0,249,.15);
+
+  /* ── LAYOUT ──────────────────────────────────────────────── */
+  --max-width:   760px;   /* Maximale Breite des Inhalts       */
+  --header-h:    64px;    /* Header-Höhe (für padding-top)     */
+  --panel-pad:   16px;    /* Panel-Innenabstand (mobile)       */
+  --panel-pad-d: 24px;    /* Panel-Innenabstand (desktop)      */
+
+  /* ── TRANSITIONS ─────────────────────────────────────────── */
+  --ease: cubic-bezier(.4,0,.2,1);  /* Standard-Easing           */
+  --t-fast:   0.15s var(--ease);
+  --t-normal: 0.25s var(--ease);
+  --t-slow:   0.4s  var(--ease);
+}
+
+/* ── COSMETICS: Theme-Overrides ────────────────────────────────
+   Diese Klassen werden vom cosmetics.js per JavaScript
+   auf das <body>-Element angewendet.
+   Füge hier eigene Themes hinzu!
+────────────────────────────────────────────────────────────── */
+
+/* Theme: Golden Dawn (freigeschaltet ab Level 10) */
+body.theme-golden {
+  --cyan: #ffb300;
+  --glow-cyan: 0 0 12px rgba(255,179,0,.4), 0 0 24px rgba(255,179,0,.2);
+}
+
+/* Theme: Dark Matter (freigeschaltet ab Level 25) */
+body.theme-dark-matter {
+  --cyan: #9e9e9e;
+  --bg-body: #050507;
+  --bg-card: #0a0a0d;
+  --glow-cyan: 0 0 12px rgba(158,158,158,.3), 0 0 24px rgba(158,158,158,.1);
+}
+
+/* Theme: Plasma (freigeschaltet ab 10.000 XP) */
+body.theme-plasma {
+  --cyan: #e040fb;
+  --glow-cyan: 0 0 12px rgba(224,64,251,.4), 0 0 24px rgba(224,64,251,.2);
+}
+
+/* Frame: Gold (freigeschaltet ab Level 50) */
+body.frame-gold   .avatar { border-color: var(--amber) !important; box-shadow: var(--glow-amber) !important; }
+
+/* Frame: Rainbow (freigeschaltet ab Level 100) */
+body.frame-rainbow .avatar {
+  border-color: transparent !important;
+  background-image: linear-gradient(var(--bg-card), var(--bg-card)),
+    linear-gradient(135deg, #ff0000,#ff7700,#ffff00,#00ff00,#0000ff,#8b00ff);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
