@@ -1,0 +1,392 @@
+/*
+ ╔══════════════════════════════════════════════════════════════╗
+ ║  mobile-polish.css — Touch UX & Game Feel Layer             ║
+ ║                                                              ║
+ ║  Pure enhancement — no layout changes, no system changes.   ║
+ ║  Safe to add / remove without breaking anything.            ║
+ ╚══════════════════════════════════════════════════════════════╝
+*/
+
+/* ── GLOBAL MOBILE FOUNDATION ──────────────────────────────── */
+
+/* Kill iOS tap highlight flash — we handle our own feedback */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* Smooth momentum scrolling everywhere */
+.screen-body,
+.screen,
+.cco-track,
+.inv-grid,
+.filter-row,
+.diff-filter-row {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent text selection on interactive elements */
+button, .inv-slot, .task-card, .ach-card-full,
+.dquest-card, .wquest-card, .lbox-slot,
+.day7-box, .hstat, .cso-panel {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ── UNIVERSAL TOUCH FEEDBACK ───────────────────────────────── */
+/*
+ * Everything tappable gets a satisfying press-down.
+ * :active fires on touch devices; transition makes it snappy.
+ */
+
+/* Primary buttons */
+.fbtn,
+.lu-btn,
+.loot-btn,
+.lr-open-btn,
+.lr-collect-btn,
+.cso-cancel-btn,
+.cco-use-btn,
+.weekly-add-btn,
+.wquest-btn,
+.diff-ftab,
+.ftab,
+.qtab,
+.ptab,
+.rtab,
+.bnav-btn,
+.daily7-claim-btn,
+.tact-btn {
+  transition: transform 0.09s ease, filter 0.09s ease, box-shadow 0.09s ease, background 0.09s ease;
+}
+
+.fbtn:active,
+.lu-btn:active,
+.loot-btn:active,
+.lr-open-btn:active,
+.lr-collect-btn:active,
+.cso-cancel-btn:active,
+.cco-use-btn:active,
+.weekly-add-btn:active,
+.wquest-btn:active {
+  transform: scale(0.95);
+  filter: brightness(0.9);
+}
+
+/* Tab buttons — scale down subtly */
+.diff-ftab:active,
+.ftab:active,
+.qtab:active,
+.ptab:active,
+.rtab:active { transform: scale(0.93); }
+
+/* Bottom nav — icon bounces up */
+.bnav-btn:active .bi { transform: translateY(-3px) scale(1.18); }
+.bnav-btn .bi { transition: transform 0.12s cubic-bezier(.34,1.5,.64,1); }
+
+/* Task action buttons — punch effect */
+.tact-btn:active { transform: scale(0.88); }
+
+/* ── TASK CARDS ─────────────────────────────────────────────── */
+
+.task-card {
+  /* Elevation */
+  box-shadow: 0 2px 8px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.03);
+  margin-bottom: 12px;
+  /* Override hover-based transform with a simpler static state */
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+}
+.task-card:active {
+  transform: scale(0.98);
+  box-shadow: 0 1px 4px rgba(0,0,0,.5);
+}
+
+/* Daily quest cards */
+.dquest-card {
+  box-shadow: 0 2px 8px rgba(0,0,0,.35);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  margin-bottom: 10px;
+}
+.dquest-card:not(.dquest-done):active {
+  transform: scale(0.97);
+  box-shadow: 0 1px 4px rgba(0,0,0,.5);
+}
+
+/* Weekly quest cards */
+.wquest-card {
+  box-shadow: 0 3px 12px rgba(0,0,0,.4);
+  transition: transform 0.1s ease;
+}
+.wquest-card:active { transform: scale(0.98); }
+
+/* Complete animation — green pulse */
+@keyframes taskComplete {
+  0%   { box-shadow: 0 0 0 0 rgba(0,230,118,.6); }
+  50%  { box-shadow: 0 0 0 10px rgba(0,230,118,0); transform: scale(1.01); }
+  100% { box-shadow: 0 0 0 0 rgba(0,230,118,0); }
+}
+.task-card.completing { animation: taskComplete 0.4s ease; }
+
+/* ── INVENTORY SLOTS ────────────────────────────────────────── */
+
+.inv-slot {
+  /* Deeper depth */
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 2px 6px rgba(0,0,0,.4);
+  transition: transform 0.1s cubic-bezier(.34,1.5,.64,1),
+              box-shadow 0.1s ease,
+              border-color 0.1s ease;
+}
+.inv-slot-filled:active {
+  transform: scale(0.9);
+  box-shadow: 0 0 0 2px rgba(255,255,255,.15);
+}
+
+/* Rarity glows — always on (not just on hover) */
+.inv-slot-rare      { box-shadow: 0 0 8px rgba(41,121,255,.25), inset 0 1px 0 rgba(41,121,255,.05); }
+.inv-slot-epic      { box-shadow: 0 0 10px rgba(213,0,249,.28), inset 0 1px 0 rgba(213,0,249,.06); }
+.inv-slot-legendary { box-shadow: 0 0 12px rgba(255,179,0,.32), inset 0 1px 0 rgba(255,179,0,.07); }
+.inv-slot-mythic    { box-shadow: 0 0 14px rgba(255,60,60,.38), inset 0 1px 0 rgba(255,60,60,.08); }
+
+/* Last-used slot — stronger gold pulse */
+@keyframes lastUsedPulseStrong {
+  0%,100% { box-shadow: 0 0 10px rgba(255,179,0,.4), 0 0 20px rgba(255,179,0,.12); }
+  50%     { box-shadow: 0 0 18px rgba(255,179,0,.65), 0 0 36px rgba(255,179,0,.2); }
+}
+.inv-slot-lastused-special {
+  animation: lastUsedPulseStrong 2.4s ease-in-out infinite;
+}
+.inv-slot-lastused-special:active { transform: scale(0.9) !important; }
+
+/* ── LOOTBOX SLOTS (inventory page) ────────────────────────── */
+
+.lbox-slot {
+  transition: transform 0.1s cubic-bezier(.34,1.5,.64,1), box-shadow 0.12s ease;
+}
+.lbox-slot:active {
+  transform: scale(0.91) !important;
+}
+
+/* ── ACHIEVEMENT CARDS ──────────────────────────────────────── */
+
+.ach-card-full {
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,.3);
+}
+.ach-card-full:active { transform: scale(0.98); }
+.ach-card-full.unlocked { box-shadow: 0 2px 8px rgba(0,0,0,.3), 0 0 0 1px rgba(0,230,118,.15); }
+
+/* ── PROFILE STATS ──────────────────────────────────────────── */
+
+.hstat {
+  transition: transform 0.1s ease;
+  cursor: default;
+}
+
+/* ── OVERLAY PANELS ─────────────────────────────────────────── */
+
+/* Card select overlay — zoom in from slightly smaller */
+.cso-backdrop.open .cso-panel {
+  animation: csoSlideIn 0.22s cubic-bezier(.34,1.2,.64,1);
+}
+@keyframes csoSlideIn {
+  from { transform: scale(0.93) translateY(12px); opacity: 0; }
+  to   { transform: scale(1) translateY(0);       opacity: 1; }
+}
+
+/* Bottom sheet (loot / level-up / achievement) */
+.cco-sheet.open { animation: sheetSlideUp 0.28s cubic-bezier(.22,.9,.36,1); }
+@keyframes sheetSlideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+/* Forced overlays — faster fade in */
+.forced-overlay.open { animation: forcedFadeIn 0.2s ease; }
+@keyframes forcedFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── SCREEN TRANSITIONS ─────────────────────────────────────── */
+
+/* Screens fade in when activated */
+.screen.active { animation: screenFadeIn 0.18s ease; }
+@keyframes screenFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── DAILY LOGIN BOXES ──────────────────────────────────────── */
+
+.day7-box {
+  transition: transform 0.1s ease;
+  cursor: default;
+}
+.day7-box.day7-current {
+  box-shadow: 0 0 12px rgba(0,229,255,.3);
+}
+
+/* ── XP BAR ─────────────────────────────────────────────────── */
+
+/* Nicer fill transition */
+.topbar-fill,
+.hero-xp-fill,
+.prof-xp-fill {
+  transition: width 0.7s cubic-bezier(.4,0,.2,1);
+}
+
+/* ── FORM INPUTS ────────────────────────────────────────────── */
+
+.fi {
+  /* Bigger touch target on mobile */
+  min-height: 44px;
+  font-size: 16px !important; /* Prevents iOS zoom on focus */
+}
+.fsel {
+  min-height: 44px;
+  font-size: 16px !important;
+}
+
+/* ── BOTTOM NAV TOUCH TARGETS ───────────────────────────────── */
+
+.bnav-btn {
+  /* Ensure minimum 44px touch target (iOS HIG) */
+  min-height: 50px;
+  position: relative;
+}
+/* Expand touch area beyond visual bounds */
+.bnav-btn::after {
+  content: '';
+  position: absolute;
+  inset: -4px -8px;
+}
+
+/* ── TASK ACTION BUTTONS ────────────────────────────────────── */
+
+/* Bigger tap targets */
+.tact-btn {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+}
+
+/* ── CARD POPUP ─────────────────────────────────────────────── */
+
+.card-popup-use:active {
+  transform: scale(0.95) !important;
+}
+.card-popup-close:active {
+  transform: scale(0.85);
+  color: var(--red);
+}
+
+/* ── LOOTBOX REVEAL TOUCH ───────────────────────────────────── */
+
+.lr-box:active { transform: scale(0.9) !important; }
+.lr-open-btn:active { transform: scale(0.94); }
+
+/* ── CARD REVEAL SLOT GLOW ON USE (select grid) ─────────────── */
+
+@keyframes slotUsedBurn {
+  0%   { box-shadow: 0 0 0 0 rgba(255,255,255,.0); }
+  30%  { box-shadow: 0 0 0 8px rgba(255,255,255,.25), 0 0 20px rgba(255,255,255,.1); filter: brightness(1.6); }
+  100% { box-shadow: 0 0 0 0 rgba(255,255,255,.0); filter: brightness(1); }
+}
+.inv-slot-using {
+  animation: slotUsedBurn 0.42s ease forwards !important;
+}
+
+/* ── RESPONSIVE TWEAKS ──────────────────────────────────────── */
+
+/* Ensure inventory grid fits on small screens */
+@media (max-width: 360px) {
+  .inv-grid {
+    gap: 5px;
+    padding: 7px;
+  }
+  .inv-slot-ico { font-size: 18px; }
+}
+
+/* Slightly larger slots on wider phones */
+@media (min-width: 400px) {
+  .inv-slot-ico { font-size: 24px; }
+}
+
+/* Quest tab label hide on tiny screens */
+@media (max-width: 320px) {
+  .qtab span:last-child { display: none; }
+  .qtab-ico { font-size: 18px; }
+}
+
+/* ── PROFILE STATS GRID ─────────────────────────────────────── */
+
+.p-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.pst {
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 6px;
+  text-align: center;
+  transition: transform 0.1s ease;
+}
+.pst:active { transform: scale(0.95); }
+.pst-val {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.pst-lbl {
+  font-size: 9px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+/* ── WQUEST +1 BUTTON BIGGER ────────────────────────────────── */
+.wquest-btn {
+  min-width: 48px;
+  min-height: 44px;
+  border-radius: 12px;
+}
+
+/* ── SCROLL PERFORMANCE ─────────────────────────────────────── */
+.screen-body {
+  will-change: scroll-position;
+  contain: layout style;
+}
+.quest-panel,
+.prof-tab-content {
+  contain: layout style;
+}
+
+/* ── NOTIF BUTTON TOUCH ─────────────────────────────────────── */
+.notif-btn {
+  min-width: 40px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s ease;
+}
+.notif-btn:active { transform: scale(0.87); }
+
+/* ── HOME AVATAR ────────────────────────────────────────────── */
+.hero-avatar:active { transform: scale(0.94); }
+
+/* ── HERO STATS ─────────────────────────────────────────────── */
+.hstat {
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.025);
+  box-shadow: 0 2px 6px rgba(0,0,0,.3);
+}
+
+/* ── LOOTBOX INVENTORY EMPTY ────────────────────────────────── */
+.lbox-empty { border-radius: 12px; }
+
